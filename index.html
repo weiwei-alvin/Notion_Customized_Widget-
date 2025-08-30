@@ -125,8 +125,10 @@
     
     .gate-card img {
       display: block;
-      width: 96px;
-      height: 96px;
+      max-width: 200px;
+      max-height: 200px;
+      width: auto;
+      height: auto;
       object-fit: contain;
       border-radius: 16px;
       box-shadow: 0 6px 24px rgba(0,0,0,.08);
@@ -185,7 +187,7 @@
   <!-- Icon Gate（點擊圖示進入編輯器） -->
   <div id="gate" class="gate">
     <div class="gate-card">
-      <img id="gateIcon" src="./assets/Icon/widget_icon.svg" alt="Widget Icon"/>
+      <img id="gateIcon" src="./assets/Icon/widget_icon.png" alt="Widget Icon"/>
       <div id="gateTitle" class="gate-title">點一下開始編輯</div>
     </div>
   </div>
@@ -249,6 +251,18 @@
         $('#gateIcon').src = iconUrl;
       }
       $('#gateTitle').textContent = title;
+      
+      // 圖示載入檢查
+      const icon = $('#gateIcon');
+      icon.addEventListener('load', function() {
+        console.log('圖示載入成功:', icon.naturalWidth, 'x', icon.naturalHeight);
+      });
+      
+      icon.addEventListener('error', function() {
+        console.error('圖示載入失敗，使用預設圖示');
+        // 如果 PNG 載入失敗，嘗試使用 SVG
+        icon.src = './assets/Icon/widget_icon.svg';
+      });
       
       // 根據參數決定是否顯示 Gate
       if (gateParam === '0' || (!iconUrl && gateParam !== '1')) {
