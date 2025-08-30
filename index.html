@@ -4,76 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Notion 中文字體 & Callout Widget</title>
-  
-  <!-- 自訂字體定義 -->
-  <style>
-    @font-face {
-      font-family: 'ChenYuluoyan-Thin-Monospaced';
-      src: url('./assets/Fonts/ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');
-      font-weight: 100;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'cwtexq-fangsong';
-      src: url('./assets/Fonts/cwtexq-fangsong-Regular.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'simfang';
-      src: url('./assets/Fonts/simfang.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'STFANGSO';
-      src: url('./assets/Fonts/STFANGSO.TTF') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'ToneOZ-Tsuipita-TC';
-      src: url('./assets/Fonts/ToneOZ-Tsuipita-TC.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '王汉宗顏楷体繁';
-      src: url('./assets/Fonts/王汉宗顏楷体繁.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體';
-      src: url('./assets/Fonts/微軟正黑體/msjh.ttc') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體-Bold';
-      src: url('./assets/Fonts/微軟正黑體/msjhbd.ttc') format('truetype');
-      font-weight: 700;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體-Light';
-      src: url('./assets/Fonts/微軟正黑體/msjhl.ttc') format('truetype');
-      font-weight: 300;
-      font-style: normal;
-    }
-  </style>
-  
   <!-- Google Fonts：繁中可用字體 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
-  
   <style>
     :root{
       --font: 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
@@ -88,43 +20,8 @@
       --accent: #8b5cf6; /* callout 邊條與圖示顏色 */
       --shadow: 0 0 0 rgba(0,0,0,0);
     }
-    
     *{box-sizing:border-box}
     body{margin:0; background:var(--bg);}
-
-    /* Widget 圖示容器 */
-    .widget-icon-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 120px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .widget-icon-container:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    
-    .widget-icon {
-      width: 64px;
-      height: 64px;
-      filter: brightness(0) invert(1);
-    }
-    
-    /* 文字編輯器容器 */
-    .editor-container {
-      display: none;
-      width: 100%;
-    }
-    
-    .editor-container.show {
-      display: block;
-    }
 
     .wrap{
       font-family: var(--font);
@@ -168,105 +65,96 @@
     /* 讓 Notion 可用「Resize to fit」時高度剛好 */
     #content{ padding: 8px }
     .hidden{ display:none !important }
-    
-    /* 返回按鈕 */
-    .back-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      font-size: 18px;
-      display: none;
-      z-index: 1000;
-      transition: all 0.3s ease;
-    }
-    
-    .back-btn:hover {
-      transform: scale(1.1);
-      background: color-mix(in oklab, var(--accent) 80%, #0000 20%);
-    }
-    
-    .back-btn.show {
-      display: block;
-    }
+  .gate{position:relative;}
+.gate.hidden{display:none}
+.gate{display:grid;place-items:center;height:320px}
+.gate-card{display:grid;gap:12px;place-items:center;border:1px dashed #ddd;padding:24px;border-radius:16px;background:color-mix(in oklab, var(--accent) 6%, #fff 94%)}
+.gate-card img{display:block;width:96px;height:96px;object-fit:contain;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+.gate-title{font:600 16px/1.4 ui-sans-serif,system-ui;color:#475569}
+</style>
+  <!-- 自帶字體：請確認 /assets/Fonts 內含下列檔案，並注意授權 -->
+  <style>
+    @font-face{font-family:'ChenYuluoyan Thin Mono';src:url('./assets/Fonts/ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');font-display:swap}
+    @font-face{font-family:'cwTeX Fangsong';src:url('./assets/Fonts/cwtexq-fangsong-Regular.ttf') format('truetype');font-display:swap}
+    @font-face{font-family:'SimFang';src:url('./assets/Fonts/simfang.ttf') format('truetype');font-display:swap}
+    @font-face{font-family:'STFangsong';src:url('./assets/Fonts/STFANGSO.TTF') format('truetype');font-display:swap}
+    @font-face{font-family:'ToneOZ Tsuipita TC';src:url('./assets/Fonts/ToneOZ-Tsuipita-TC.ttf') format('truetype');font-display:swap}
+    @font-face{font-family:'WangHanZong YanKai';src:url('./assets/Fonts/王汉宗顏楷体繁.ttf') format('truetype');font-display:swap}
+    /* 注意：.ttc 在部分瀏覽器相容性較差，建議轉成 .woff2／.ttf */
+    @font-face{font-family:'Microsoft JhengHei';src:url('./assets/Fonts/微軟正黑體/msjh.ttc') format('truetype');font-display:swap}
   </style>
 </head>
 <body>
-  <!-- 返回按鈕 -->
-  <button class="back-btn" id="backBtn" title="返回圖示">←</button>
-  
-  <!-- Widget 圖示 -->
-  <div class="widget-icon-container" id="iconContainer">
-    <img src="./assets/Icon/widget_icon.svg" alt="Widget Icon" class="widget-icon" id="widgetIcon">
-  </div>
-
-  <!-- 文字編輯器 -->
-  <div class="editor-container" id="editorContainer">
     <div id="controls" class="panel">
-      <label>模式
-        <select id="mode">
-          <option value="plain">純文字</option>
-          <option value="callout">Callout</option>
-          <option value="strip">左邊色條</option>
-        </select>
-      </label>
-      <label>字體
-        <select id="font">
-          <option value="Noto Sans TC">Noto Sans TC</option>
-          <option value="Noto Serif TC">Noto Serif TC</option>
-          <option value="LXGW WenKai TC">LXGW WenKai TC（霞鶩文楷）</option>
-          <option value="ChenYuluoyan-Thin-Monospaced">陳雨露圓體細等寬</option>
-          <option value="cwtexq-fangsong">全字庫仿宋體</option>
-          <option value="simfang">仿宋體</option>
-          <option value="STFANGSO">華文仿宋體</option>
-          <option value="ToneOZ-Tsuipita-TC">ToneOZ 字體</option>
-          <option value="王汉宗顏楷体繁">王漢宗顏楷體繁體</option>
-          <option value="微軟正黑體">微軟正黑體</option>
-          <option value="微軟正黑體-Bold">微軟正黑體粗體</option>
-          <option value="微軟正黑體-Light">微軟正黑體細體</option>
-        </select>
-      </label>
-      <label>大小 <input id="size" type="number" min="10" max="96" step="1" value="18"> px</label>
-      <label>粗細 <input id="weight" type="number" min="100" max="900" step="100" value="500"></label>
-      <label>文字色 <input id="text" type="color" value="#111111"></label>
-      <label>重點色 <input id="accent" type="color" value="#8b5cf6"></label>
-      <label>背景色 <input id="bg" type="text" value="transparent" placeholder="#FFFFFF 或 transparent"></label>
-      <label>圓角 <input id="radius" type="number" min="0" max="48" value="12"> px</label>
-      <label>行距 <input id="line" type="number" step="0.05" min="1" max="2.2" value="1.55"></label>
-      <div class="spacer"></div>
-      <button class="btn" id="copyUrl">複製設定連結</button>
-      <button class="btn" id="toggleUi">隱藏面板</button>
-    </div>
-
-    <div id="content" class="wrap" contenteditable="true" spellcheck="false">在這裡輸入你的內容。你可以把整個頁面以「嵌入」放入 Notion，當作可換字體的 callout 或標題卡片使用。</div>
+    <label>模式
+      <select id="mode">
+        <option value="plain">純文字</option>
+        <option value="callout">Callout</option>
+        <option value="strip">左邊色條</option>
+      </select>
+    </label>
+    <label>字體
+      <select id="font">
+        <option value="Noto Sans TC">Noto Sans TC</option>
+        <option value="Noto Serif TC">Noto Serif TC</option>
+        <option value="LXGW WenKai TC">LXGW WenKai TC（霞鶩文楷）</option>
+        <option value="ChenYuluoyan Thin Mono">ChenYuluoyan Thin Mono</option>
+        <option value="cwTeX Fangsong">cwTeX Fangsong</option>
+        <option value="SimFang">SimFang</option>
+        <option value="STFangsong">STFangsong</option>
+        <option value="ToneOZ Tsuipita TC">ToneOZ Tsuipita TC</option>
+        <option value="WangHanZong YanKai">WangHanZong YanKai</option>
+        <option value="Microsoft JhengHei">Microsoft JhengHei（可能需轉檔）</option>
+      </select>
+    </label>
+    <label>大小 <input id="size" type="number" min="10" max="96" step="1" value="18"> px</label>
+    <label>粗細 <input id="weight" type="number" min="100" max="900" step="100" value="500"></label>
+    <label>文字色 <input id="text" type="color" value="#111111"></label>
+    <label>重點色 <input id="accent" type="color" value="#8b5cf6"></label>
+    <label>背景色 <input id="bg" type="text" value="transparent" placeholder="#FFFFFF 或 transparent"></label>
+    <label>圓角 <input id="radius" type="number" min="0" max="48" value="12"> px</label>
+    <label>行距 <input id="line" type="number" step="0.05" min="1" max="2.2" value="1.55"></label>
+    <div class="spacer"></div>
+    <button class="btn" id="copyUrl">複製設定連結</button>
+    <button class="btn" id="toggleUi">隱藏面板</button>
   </div>
+
+  <!-- 首屏 ICON Gate（點擊圖示進入編輯器） -->
+  <div id="gate" class="gate hidden">
+    <div class="gate-card">
+      <img id="gateIcon" alt="widget icon"/>
+      <div id="gateTitle" class="gate-title">點一下開始編輯</div>
+    </div>
+  </div>
+
+  <div id="content" class="wrap" contenteditable="true" spellcheck="false">在這裡輸入你的內容。你可以把整個頁面以「嵌入」放入 Notion，當作可換字體的 callout 或標題卡片使用。</div> class="wrap" contenteditable="true" spellcheck="false">在這裡輸入你的內容。你可以把整個頁面以「嵌入」放入 Notion，當作可換字體的 callout 或標題卡片使用。</div>
 
   <script>
     // 工具：讀取/寫入 URL 參數
     const $ = (s)=>document.querySelector(s);
     const params = new URLSearchParams(location.search);
 
-    // 圖示點擊事件
-    $('#iconContainer').addEventListener('click', function() {
-      $('#iconContainer').style.display = 'none';
-      $('#editorContainer').classList.add('show');
-      $('#backBtn').classList.add('show');
-      tickResize();
-    });
-
-    // 返回按鈕事件
-    $('#backBtn').addEventListener('click', function() {
-      $('#iconContainer').style.display = 'flex';
-      $('#editorContainer').classList.remove('show');
-      $('#backBtn').classList.remove('show');
-      tickResize();
-    });
+    // Gate 初始：若提供 iconUrl，預設顯示首屏 ICON Gate
+    function setupGateFromParams(){
+      const iconUrl = params.get('iconUrl');
+      const gate = params.get('gate'); // '1' 顯示，'0' 關閉
+      const title = params.get('title') || '點一下開始編輯';
+      const gateEl = document.getElementById('gate');
+      const iconEl = document.getElementById('gateIcon');
+      const titleEl = document.getElementById('gateTitle');
+      titleEl.textContent = title;
+      if(iconUrl && gate !== '0'){
+        iconEl.src = iconUrl;
+        gateEl.classList.remove('hidden');
+        document.getElementById('content').style.display = 'none';
+        document.getElementById('controls').style.display = params.get('ui')==='0' ? 'none':'flex';
+        gateEl.addEventListener('click', ()=>{
+          gateEl.classList.add('hidden');
+          document.getElementById('content').style.display = '';
+          tickResize();
+        });
+      }
+    }
 
     function applyFromParams(){
       const ui = params.get('ui');
@@ -285,7 +173,6 @@
       const shadow = params.get('shadow') === '1' ? '0 6px 24px rgba(0,0,0,.08)' : '0 0 0 rgba(0,0,0,0)';
       const textContent = params.get('textContent');
       const icon = params.get('icon') || '💡';
-      const showEditor = params.get('showEditor') === '1';
 
       setCSS('--font', font);
       setCSS('--size', size+"px");
@@ -299,14 +186,6 @@
       setCSS('--shadow', shadow);
       document.documentElement.style.setProperty('--icon', `'"${icon}"'`);
 
-      // 如果 URL 參數指定顯示編輯器，則直接顯示
-      if (showEditor) {
-        $('#iconContainer').style.display = 'none';
-        $('#editorContainer').classList.add('show');
-        $('#backBtn').classList.add('show');
-      }
-
-      // 模式切換
       const c = $('#content');
       c.classList.remove('callout','strip');
       if(mode==='callout') c.classList.add('callout');
@@ -314,7 +193,6 @@
 
       if(textContent) c.innerText = decodeURIComponent(textContent);
 
-      // 套用到控制面板初始值
       $('#font').value = font;
       $('#size').value = Number(size);
       $('#weight').value = Number(weight);
@@ -326,6 +204,7 @@
       $('#mode').value = mode;
 
       tickResize();
+      setupGateFromParams();
     }
 
     function getCSS(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
@@ -374,10 +253,9 @@
       q.set('accent', $('#accent').value);
       q.set('mode', $('#mode').value);
       q.set('ui', $('#controls').classList.contains('hidden') ? '0' : '1');
-      // 也把目前文字存到參數（可選）
       q.set('textContent', encodeURIComponent($('#content').innerText));
-      // 記錄編輯器狀態
-      q.set('showEditor', $('#editorContainer').classList.contains('show') ? '1' : '0');
+      // 若使用 ICON gate，也保留參數
+      ['iconUrl','gate','title'].forEach(k=>{ const v = params.get(k); if(v!==null) q.set(k,v); });
       history.replaceState(null, '', '?' + q.toString());
     }
 
