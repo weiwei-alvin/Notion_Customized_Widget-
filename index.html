@@ -215,10 +215,10 @@
     /* 讓 contenteditable 內的 list/todo 好編輯 */
     [contenteditable] li, [contenteditable] .todo-item, [contenteditable] summary { outline: none; }
 
-    /* 隱藏面板時的無縫嵌入樣式 */
+    /* 面板隱藏 → 與 Notion 無縫融合（透明、零邊距、無陰影） */
     .ui-hidden .panel{ display:none !important; }
-    .ui-hidden #content{ padding:0 !important; background:transparent !important; }
-    .ui-hidden .wrap{ padding:0 !important; box-shadow:none !important; background:transparent !important; border:none !important; }
+    .ui-hidden #content{ background:transparent !important; padding:0 !important; }
+    .ui-hidden .wrap{ background:transparent !important; border:none !important; box-shadow:none !important; }
 
     /* 有助 Notion 計算內嵌高度 */
     html, body { height:auto; }
@@ -532,11 +532,14 @@
 
     function applyFromParams(){
       const ui = params.get('ui');
-      if(ui === '0') {
+      if (ui === '0') {
         $('#controls').classList.add('hidden');
         document.body.classList.add('ui-hidden');
+        $('#content').classList.add('transparent-bg'); // 若要沿用你的 class
       } else {
+        $('#controls').classList.remove('hidden');
         document.body.classList.remove('ui-hidden');
+        $('#content').classList.remove('transparent-bg');
       }
 
       const font = params.get('font') || getCSS('--font').replace(/^["']|["']$/g,'');
@@ -568,7 +571,7 @@
       // 模式切換 - 現在由 renderBlock 處理
       // 初始化時不立即渲染，等最後統一處理
 
-      if(textContent) c.innerText = decodeURIComponent(textContent);
+      if(textContent) $('#content').innerText = decodeURIComponent(textContent);
 
       // 套用到控制面板初始值
       $('#font').value = font;
@@ -618,7 +621,12 @@
     function togglePanel(){
       const controls = $('#controls');
       const hidden = controls.classList.toggle('hidden');
+      // 面板隱藏時，body 套用 ui-hidden；顯示時移除
       document.body.classList.toggle('ui-hidden', hidden);
+
+      // 若仍想保留你原本的 transparent-bg 樣式，也可以同步處理
+      $('#content').classList.toggle('transparent-bg', hidden);
+
       syncUrl();
       tickResize();
     }
@@ -640,7 +648,7 @@
       q.set('line', $('#line').value);
       q.set('accent', $('#accent').value);
       q.set('mode', $('#mode').value);
-      q.set('ui', $('#controls').classList.contains('hidden') ? '0' : '1');
+      q.set('ui', document.body.classList.contains('ui-hidden') ? '0' : '1');
       // 也把目前文字存到參數（可選）
       q.set('textContent', encodeURIComponent($('#content').innerText));
       // 保留 Icon Gate 參數
@@ -652,6 +660,7 @@
     let resizeTimer;
 
     function currentContainer(){
+      // 有 Gate 就抓 Gate，否則抓編輯器容器
       const gateVisible = !$('#gate').classList.contains('hidden');
       return gateVisible ? $('#gate') : $('#editorContainer');
     }
@@ -666,9 +675,10 @@
       }, 50);
     }
 
-    // 監看整個編輯容器（含內容/切換模式）
+    // 觀察 editorContainer 底下的內容變化（切模式/打字/展開等）
     const obs = new MutationObserver(tickResize);
     obs.observe($('#editorContainer'), {childList:true, subtree:true, characterData:true});
+
     window.addEventListener('resize', tickResize);
 
     // 初始化
@@ -681,17 +691,14 @@
     
     tickResize();
 
-    // 快捷鍵：Shift + P 切換面板；Ctrl/⌘ + Shift + 0 強制顯示
+    // Shift + P：切換面板顯示/隱藏（不需要 Ctrl/⌘）
+    // 小提醒：在 Notion 內嵌時，要先點一下 widget 讓 iframe 取得焦點，快捷鍵才會送進來。
     document.addEventListener('keydown', (e)=>{
-      const key = (e.key || '').toLowerCase();
-      const mod = e.ctrlKey || e.metaKey;
-      if (e.shiftKey && key === 'p' && !mod) {
-        e.preventDefault();
+      const isShiftP = e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey &&
+                       (e.key === 'P' || e.key === 'p');
+      if (isShiftP) {
+        e.preventDefault();           // 避免 contenteditable 插入字元
         togglePanel();
-      }
-      if (mod && e.shiftKey && key === '0') {
-        e.preventDefault();
-        if ($('#controls').classList.contains('hidden')) togglePanel();
       }
     });
   </script>
