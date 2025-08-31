@@ -214,6 +214,14 @@
 
     /* 讓 contenteditable 內的 list/todo 好編輯 */
     [contenteditable] li, [contenteditable] .todo-item, [contenteditable] summary { outline: none; }
+
+    /* 隱藏面板時的無縫嵌入樣式 */
+    .ui-hidden .panel{ display:none !important; }
+    .ui-hidden #content{ padding:0 !important; background:transparent !important; }
+    .ui-hidden .wrap{ padding:0 !important; box-shadow:none !important; background:transparent !important; border:none !important; }
+
+    /* 有助 Notion 計算內嵌高度 */
+    html, body { height:auto; }
   </style>
 </head>
 <body>
@@ -524,7 +532,12 @@
 
     function applyFromParams(){
       const ui = params.get('ui');
-      if(ui === '0') $('#controls').classList.add('hidden');
+      if(ui === '0') {
+        $('#controls').classList.add('hidden');
+        document.body.classList.add('ui-hidden');
+      } else {
+        document.body.classList.remove('ui-hidden');
+      }
 
       const font = params.get('font') || getCSS('--font').replace(/^["']|["']$/g,'');
       const size = params.get('size') || '18';
@@ -602,7 +615,14 @@
     document.addEventListener('input', (e)=>{
       const id = e.target.id; if(!(id in map)) return; map[id](e.target.value); syncUrl(); tickResize();
     });
-    $('#toggleUi').addEventListener('click', ()=>{ $('#controls').classList.toggle('hidden'); syncUrl(); tickResize(); });
+    function togglePanel(){
+      const controls = $('#controls');
+      const hidden = controls.classList.toggle('hidden');
+      document.body.classList.toggle('ui-hidden', hidden);
+      syncUrl();
+      tickResize();
+    }
+    $('#toggleUi').addEventListener('click', togglePanel);
     $('#copyUrl').addEventListener('click', ()=>{ navigator.clipboard.writeText(location.href).then(()=>{ alert('已複製連結，可直接嵌入 Notion！'); }); });
     $('#insertExample').addEventListener('click', ()=>{ 
       const currentMode = $('#mode').value;
@@ -630,15 +650,25 @@
 
     // 自動調整高度（幫助 Notion 的「Resize to fit」）
     let resizeTimer;
+
+    function currentContainer(){
+      const gateVisible = !$('#gate').classList.contains('hidden');
+      return gateVisible ? $('#gate') : $('#editorContainer');
+    }
+
     function tickResize(){
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(()=>{
-        document.body.style.height = 'auto';
-        document.body.style.height = document.documentElement.scrollHeight + 'px';
+        const target = currentContainer();
+        const h = Math.max(1, target.scrollHeight);
+        document.body.style.height = h + 'px';
+        document.documentElement.style.height = h + 'px';
       }, 50);
     }
+
+    // 監看整個編輯容器（含內容/切換模式）
     const obs = new MutationObserver(tickResize);
-    obs.observe($('#content'), {childList:true, subtree:true, characterData:true});
+    obs.observe($('#editorContainer'), {childList:true, subtree:true, characterData:true});
     window.addEventListener('resize', tickResize);
 
     // 初始化
@@ -650,6 +680,20 @@
     renderBlock(initialMode, true);
     
     tickResize();
+
+    // 快捷鍵：Ctrl/⌘ + Shift + P 切換面板；Ctrl/⌘ + Shift + 0 強制顯示
+    document.addEventListener('keydown', (e)=>{
+      const key = (e.key || '').toLowerCase();
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.shiftKey && key === 'p') {
+        e.preventDefault();
+        togglePanel();
+      }
+      if (mod && e.shiftKey && key === '0') {
+        e.preventDefault();
+        if ($('#controls').classList.contains('hidden')) togglePanel();
+      }
+    });
   </script>
 </body>
 </html>
