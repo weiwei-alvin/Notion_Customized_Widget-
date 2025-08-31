@@ -681,11 +681,11 @@
     
     tickResize();
 
-    // 快捷鍵：Ctrl/⌘ + Shift + P 切換面板；Ctrl/⌘ + Shift + 0 強制顯示
+    // 快捷鍵：Shift + P 切換面板；Ctrl/⌘ + Shift + 0 強制顯示
     document.addEventListener('keydown', (e)=>{
       const key = (e.key || '').toLowerCase();
       const mod = e.ctrlKey || e.metaKey;
-      if (mod && e.shiftKey && key === 'p') {
+      if (e.shiftKey && key === 'p' && !mod) {
         e.preventDefault();
         togglePanel();
       }
