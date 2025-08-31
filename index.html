@@ -7,11 +7,54 @@
   
   <!-- 自訂字體定義 -->
   <style>
+    /* 王漢宗顏楷體（改 ASCII 名稱與檔名） */
+    @font-face {
+      font-family: 'WangHanZongYanKaiTC';
+      src: url('./assets/Fonts/wanghanzong-yankai-tc.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* 微軟正黑體：單一家族，多權重（注意授權風險！） */
+    @font-face {
+      font-family: 'MicrosoftJhengHeiWeb';
+      src: url('./assets/Fonts/微軟正黑體/msjh.ttc') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'MicrosoftJhengHeiWeb';
+      src: url('./assets/Fonts/微軟正黑體/msjhbd.ttc') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'MicrosoftJhengHeiWeb';
+      src: url('./assets/Fonts/微軟正黑體/msjhl.ttc') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ToneOZ */
+    @font-face {
+      font-family: 'ToneOZ-Tsuipita-TC';
+      src: url('./assets/Fonts/toneoz-tsuipita-tc.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* 其他字體保持原樣 */
     @font-face {
       font-family: 'ChenYuluoyan-Thin-Monospaced';
       src: url('./assets/Fonts/ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');
       font-weight: 100;
       font-style: normal;
+      font-display: swap;
     }
     
     @font-face {
@@ -19,6 +62,7 @@
       src: url('./assets/Fonts/cwtexq-fangsong-Regular.ttf') format('truetype');
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
     
     @font-face {
@@ -26,6 +70,7 @@
       src: url('./assets/Fonts/simfang.ttf') format('truetype');
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
     
     @font-face {
@@ -33,41 +78,7 @@
       src: url('./assets/Fonts/STFANGSO.TTF') format('truetype');
       font-weight: 400;
       font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'ToneOZ-Tsuipita-TC';
-      src: url('./assets/Fonts/ToneOZ-Tsuipita-TC.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '王汉宗顏楷体繁';
-      src: url('./assets/Fonts/王汉宗顏楷体繁.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體';
-      src: url('./assets/Fonts/微軟正黑體/msjh.ttc') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體-Bold';
-      src: url('./assets/Fonts/微軟正黑體/msjhbd.ttc') format('truetype');
-      font-weight: 700;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: '微軟正黑體-Light';
-      src: url('./assets/Fonts/微軟正黑體/msjhl.ttc') format('truetype');
-      font-weight: 300;
-      font-style: normal;
+      font-display: swap;
     }
   </style>
   
@@ -263,11 +274,9 @@
           <option value="cwtexq-fangsong">全字庫仿宋體</option>
           <option value="simfang">仿宋體</option>
           <option value="STFANGSO">華文仿宋體</option>
-          <option value="ToneOZ-Tsuipita-TC">ToneOZ 字體</option>
-          <option value="王汉宗顏楷体繁">王漢宗顏楷體繁體</option>
-          <option value="微軟正黑體">微軟正黑體</option>
-          <option value="微軟正黑體-Bold">微軟正黑體粗體</option>
-          <option value="微軟正黑體-Light">微軟正黑體細體</option>
+          <option value="ToneOZ-Tsuipita-TC">ToneOZ Tsuipita TC</option>
+          <option value="WangHanZongYanKaiTC">WangHanZong 顏楷 TC</option>
+          <option value="MicrosoftJhengHeiWeb">Microsoft JhengHei（Web）</option>
         </select>
       </label>
       <label>大小 <input id="size" type="number" min="10" max="96" step="1" value="18"> px</label>
@@ -542,7 +551,7 @@
         $('#content').classList.remove('transparent-bg');
       }
 
-      const font = params.get('font') || getCSS('--font').replace(/^["']|["']$/g,'');
+      const font = params.get('font') || getCSS('--font').replace(/^["']|["']$/g,'') || 'Noto Sans TC';
       const size = params.get('size') || '18';
       const weight = params.get('weight') || '500';
       const text = params.get('text') || '#111111';
@@ -604,7 +613,7 @@
 
     // 控制面板事件
     const map = {
-      font: v=> setCSS('--font', v),
+      font: v => setCSS('--font', `'${v}'`),
       size: v=> setCSS('--size', v+'px'),
       weight: v=> setCSS('--weight', v),
       text: v=> setCSS('--text', v),
